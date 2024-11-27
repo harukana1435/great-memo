@@ -1,9 +1,26 @@
 import { Client } from "@notionhq/client";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import { markdownToBlocks } from "@tryfabric/martian";
 
 // Notionクライアントの初期化
 const notion = new Client({ auth: process.env.NOTION_API_KEY });
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
+function parseTabs(input) {
+  // 正規表現で各セクションを抽出
+  const titleMatch = input.match(/<Title>(.*?)<\/Title>/s);
+  const contentMatch = input.match(/<Content>(.*?)<\/Content>/s);
+  const quizMatch = input.match(/<Quiz>(.*?)/s);
+
+  // 各セクションをオブジェクトに格納
+  const result = {
+    tabTitle: titleMatch ? titleMatch[1].trim() : null,
+    tabContent: contentMatch ? contentMatch[1].trim() : null,
+    tabQuiz: quizMatch ? quizMatch[1].trim() : null,
+  };
+
+  return result;
+}
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
@@ -34,6 +51,9 @@ ${tabContent}
       for await (const chunk of result.stream) {
         result_text += chunk.text();
       }
+
+      results = parseTabs(result_text);
+      const blocks = markdownToBlocks(results.tabContent + results.tabQuiz);
 
       // データベース内のページを検索
       const searchResponse = await notion.databases.query({
@@ -84,7 +104,7 @@ ${tabContent}
             "title": [
               {
                 "type": "text",
-                "text": { "content": tabId, "link": null },
+                "text": { "content": results.tabTitle, "link": null },
                 "annotations": {
                   "bold": false,
                   "italic": false,
@@ -93,27 +113,13 @@ ${tabContent}
                   "code": false,
                   "color": "default",
                 },
-                "plain_text": tabId,
+                "plain_text": results.tabTitle,
                 "href": null,
               },
             ],
           },
         },
-        "children": [
-          {
-            object: "block",
-            type: "paragraph", // 段落として子ブロックを追加
-            paragraph: {
-              rich_text: [
-                {
-                  text: {
-                    content: result_text, // tabContent全体をそのまま追加
-                  },
-                },
-              ],
-            },
-          },
-        ],
+        "children": blocks,
       });
 
       res.status(200).json({ message: "Page created successfully" });

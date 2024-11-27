@@ -13,6 +13,7 @@
   "dependencies": {
     "@google/generative-ai": "^0.21.0",
     "@notionhq/client": "^2.2.15",
+    "@tryfabric/martian": "^1.2.4",
     "dotenv": "^16.4.5",
     "express": "^4.21.1"
   },
