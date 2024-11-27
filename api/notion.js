@@ -53,7 +53,9 @@ ${tabContent}
       }
 
       results = parseTabs(result_text);
+      console.log(results);
       const blocks = markdownToBlocks(results.tabContent + results.tabQuiz);
+      console.log(blocks);
 
       // データベース内のページを検索
       const searchResponse = await notion.databases.query({
