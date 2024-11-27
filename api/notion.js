@@ -16,8 +16,8 @@ export default async function handler(req, res) {
       const searchResponse = await notion.databases.query({
         database_id: databaseId,
         filter: {
-          property: "ID", // データベースのプロパティ名
-          text: {
+          property: "tabID", // データベースのプロパティ名
+          rich_text: {
             equals: tabId,
           },
         },
@@ -31,11 +31,29 @@ export default async function handler(req, res) {
         await notion.pages.update({
           page_id: pageId,
           properties: {
+            tabID: {
+              rich_text: [
+                {
+                  text: {
+                    content: tabId, // tabIdをtabIDプロパティに設定
+                  },
+                },
+              ],
+            },
+            Title: {
+              title: [
+                {
+                  text: {
+                    content: tabContent.substring(0, 10), // tabContentの10文字目までをタイトルに
+                  },
+                },
+              ],
+            },
             Content: {
               rich_text: [
                 {
                   text: {
-                    content: tabContent,
+                    content: tabContent, // 完全なtabContentをページの内容として設定
                   },
                 },
               ],
@@ -50,11 +68,20 @@ export default async function handler(req, res) {
         await notion.pages.create({
           parent: { database_id: databaseId },
           properties: {
-            ID: {
+            tabID: {
               rich_text: [
                 {
                   text: {
-                    content: tabId,
+                    content: tabId, // tabIdをtabIDプロパティに設定
+                  },
+                },
+              ],
+            },
+            Title: {
+              title: [
+                {
+                  text: {
+                    content: tabContent.substring(0, 10), // tabContentの10文字目までをタイトルに
                   },
                 },
               ],
@@ -63,7 +90,7 @@ export default async function handler(req, res) {
               rich_text: [
                 {
                   text: {
-                    content: tabContent,
+                    content: tabContent, // 完全なtabContentをページの内容として設定
                   },
                 },
               ],
