@@ -30,44 +30,65 @@ export default async function handler(req, res) {
         // 同じIDのページが見つかった場合、そのページを更新
         const pageId = searchResponse.results[0].id;
         console.log(pageId);
-
         await notion.pages.update({
-          page_id: pageId,
-          properties: {
-            tabID: {
-              rich_text: [
+          "page_id": pageId,
+          "properties": {
+            "tabID": {
+              "id": "Y%3Axu",
+              "type": "rich_text",
+              "rich_text": [
                 {
-                  text: {
-                    content: tabId, // tabIdをtabIDプロパティに設定
+                  "type": "text",
+                  "text": { "content": tabId, "link": null },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default",
                   },
+                  "plain_text": tabId,
+                  "href": null,
                 },
               ],
             },
-            Memo: {
-              title: [
+            "Name": {
+              "id": "title",
+              "type": "title",
+              "title": [
                 {
-                  text: {
-                    content: tabContent.substring(0, 10), // tabContentの10文字目までをタイトルに
+                  "type": "text",
+                  "text": { "content": tabContent, "link": null },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default",
                   },
+                  "plain_text": tabContent,
+                  "href": null,
                 },
               ],
             },
-            children: [
-              {
-                object: "block",
-                type: "paragraph", // 段落として子ブロックを追加
-                paragraph: {
-                  rich_text: [
-                    {
-                      text: {
-                        content: tabContent, // tabContent全体をそのまま追加
-                      },
-                    },
-                  ],
-                },
-              },
-            ],
           },
+          "children": [
+            {
+              object: "block",
+              type: "paragraph", // 段落として子ブロックを追加
+              paragraph: {
+                rich_text: [
+                  {
+                    text: {
+                      content: tabContent, // tabContent全体をそのまま追加
+                    },
+                  },
+                ],
+              },
+            },
+          ],
         });
 
         res.status(200).json({ message: "Page updated successfully" });
