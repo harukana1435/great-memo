@@ -13,7 +13,7 @@ export default async function handler(req, res) {
       console.log(tabContent);
 
       const result2 = await notion.databases.query({ database_id: databaseId });
-      console.log(result2.results[0].properties);
+      console.log(JSON.stringify(result2.results[0]));
 
       // データベース内のページを検索
       const searchResponse = await notion.databases.query({
