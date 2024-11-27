@@ -9,6 +9,8 @@ export default async function handler(req, res) {
       // リクエストボディをパース
       const { tabId, tabContent } = req.body;
       const databaseId = process.env.NOTION_DATABASE_ID;
+      console.log(tabId);
+      console.log(tabContent);
 
       // データベース内のページを検索
       const searchResponse = await notion.databases.query({
