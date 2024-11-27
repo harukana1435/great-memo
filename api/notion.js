@@ -40,7 +40,7 @@ export default async function handler(req, res) {
                 },
               ],
             },
-            Title: {
+            Memo: {
               title: [
                 {
                   text: {
@@ -49,7 +49,7 @@ export default async function handler(req, res) {
                 },
               ],
             },
-            Content: {
+            Description: {
               rich_text: [
                 {
                   text: {
@@ -77,7 +77,7 @@ export default async function handler(req, res) {
                 },
               ],
             },
-            Title: {
+            Memo: {
               title: [
                 {
                   text: {
@@ -86,7 +86,7 @@ export default async function handler(req, res) {
                 },
               ],
             },
-            Content: {
+            Description: {
               rich_text: [
                 {
                   text: {
