@@ -26,7 +26,7 @@ export default async function handler(req, res) {
 入力の内容に基づいた簡単なクイズを複数問作成してください。
 
 入力文:
-${text}
+${tabContent}
       `;
 
       const result = await model.generateContentStream(prompt);
