@@ -86,7 +86,7 @@ ${text}
             "title": [
               {
                 "type": "text",
-                "text": { "content": tabContent, "link": null },
+                "text": { "content": tabId, "link": null },
                 "annotations": {
                   "bold": false,
                   "italic": false,
@@ -95,7 +95,7 @@ ${text}
                   "code": false,
                   "color": "default",
                 },
-                "plain_text": tabContent,
+                "plain_text": tabId,
                 "href": null,
               },
             ],

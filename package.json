@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@google/generative-ai": "^0.21.0",
     "@notionhq/client": "^2.2.15",
     "dotenv": "^16.4.5",
     "express": "^4.21.1"
