@@ -52,7 +52,7 @@ ${tabContent}
         result_text += chunk.text();
       }
 
-      results = parseTabs(result_text);
+      const results = parseTabs(result_text);
       console.log(results);
       const blocks = markdownToBlocks(results.tabContent + results.tabQuiz);
       console.log(blocks);
