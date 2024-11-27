@@ -1,10 +1,12 @@
-// api/notion.js
-
 const { Client } = require("@notionhq/client");
 const dotenv = require("dotenv");
 
 // 環境変数を読み込む
 dotenv.config();
+
+// 環境変数の確認
+console.log("API Key:", process.env.NOTION_API_KEY);
+console.log("Database ID:", process.env.NOTION_DATABASE_ID);
 
 // Notionクライアントを設定
 const notion = new Client({ auth: process.env.NOTION_API_KEY });
@@ -20,7 +22,11 @@ module.exports = async (req, res) => {
       // レスポンスを返す
       res.status(200).json(response);
     } catch (error) {
-      console.error(error);
+      console.error("Error details:", error);
+      console.error(
+        "Error response:",
+        error.response ? error.response.body : "No response body"
+      );
       res
         .status(500)
         .json({ error: "Failed to retrieve Notion database properties" });
