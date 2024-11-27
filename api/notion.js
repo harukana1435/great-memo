@@ -15,15 +15,13 @@ export default async function handler(req, res) {
       const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
       const prompt = `
-入力文で示される文章をNotionのマークアップ形式で出力してください。
+入力文で示される文章をNotionのMarkdown記法で出力してください。
 文章の内容を誤字や表現を修正し、必要に応じてわかりやすくしても構いません。
 
 出力する際の形式:
-## Title: 入力文の最初の20文字以内でタイトルをつけてください。
-## 内容:
-修正後の文章をNotionマークアップ形式で記述してください。
-## クイズ:
-入力の内容に基づいた簡単なクイズを複数問作成してください。
+<Title>この中に、20文字程度でタイトルをつけてください。</Title>
+<Content>この中に、入力文をマークダウン記法に変換してください。</Content>
+<Quiz>この中に、入力の内容に基づいた簡単なクイズを複数問作成してください。</Quiz>
 
 入力文:
 ${tabContent}
