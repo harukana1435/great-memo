@@ -1,7 +1,9 @@
 import { Client } from "@notionhq/client";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 // Notionクライアントの初期化
 const notion = new Client({ auth: process.env.NOTION_API_KEY });
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
@@ -9,11 +11,31 @@ export default async function handler(req, res) {
       // リクエストボディをパース
       const { tabId, tabContent } = req.body;
       const databaseId = process.env.NOTION_DATABASE_ID;
-      console.log(tabId);
-      console.log(tabContent);
 
-      const result2 = await notion.databases.query({ database_id: databaseId });
-      console.log(JSON.stringify(result2.results[0]));
+      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+
+      const prompt = `
+入力文で示される文章をNotionのマークアップ形式で出力してください。
+文章の内容を誤字や表現を修正し、必要に応じてわかりやすくしても構いません。
+
+出力する際の形式:
+## Title: 入力文の最初の20文字以内でタイトルをつけてください。
+## 内容:
+修正後の文章をNotionマークアップ形式で記述してください。
+## クイズ:
+入力の内容に基づいた簡単なクイズを複数問作成してください。
+
+入力文:
+${text}
+      `;
+
+      const result = await model.generateContentStream(prompt);
+
+      let result_text = "";
+
+      for await (const chunk of result.stream) {
+        result_text += chunk.text();
+      }
 
       // データベース内のページを検索
       const searchResponse = await notion.databases.query({
@@ -87,7 +109,7 @@ export default async function handler(req, res) {
               rich_text: [
                 {
                   text: {
-                    content: tabContent, // tabContent全体をそのまま追加
+                    content: result_text, // tabContent全体をそのまま追加
                   },
                 },
               ],
