@@ -20,7 +20,7 @@ export default async function handler(req, res) {
 
 出力する際の形式:
 <Title>この中に、20文字程度でタイトルをつけてください。</Title>
-<Content>この中に、入力文をマークダウン記法に変換してください。</Content>
+<Content>この中に、入力文をマークダウン記法に変換してください。リンクとwebのタイトルがあればわかりやすく表示してください。</Content>
 <Quiz>この中に、入力の内容に基づいた簡単なクイズを複数問作成してください。</Quiz>
 
 入力文:
