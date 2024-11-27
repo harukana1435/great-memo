@@ -49,15 +49,21 @@ export default async function handler(req, res) {
                 },
               ],
             },
-            Children: {
-              rich_text: [
-                {
-                  text: {
-                    content: tabContent, // 完全なtabContentをページの内容として設定
-                  },
+            children: [
+              {
+                object: "block",
+                type: "paragraph", // 段落として子ブロックを追加
+                paragraph: {
+                  rich_text: [
+                    {
+                      text: {
+                        content: tabContent, // tabContent全体をそのまま追加
+                      },
+                    },
+                  ],
                 },
-              ],
-            },
+              },
+            ],
           },
         });
 
@@ -86,15 +92,21 @@ export default async function handler(req, res) {
                 },
               ],
             },
-            Children: {
-              rich_text: [
-                {
-                  text: {
-                    content: tabContent, // 完全なtabContentをページの内容として設定
-                  },
+            children: [
+              {
+                object: "block",
+                type: "paragraph", // 段落として子ブロックを追加
+                paragraph: {
+                  rich_text: [
+                    {
+                      text: {
+                        content: tabContent, // tabContent全体をそのまま追加
+                      },
+                    },
+                  ],
                 },
-              ],
-            },
+              },
+            ],
           },
         });
 
