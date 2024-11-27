@@ -49,7 +49,7 @@ export default async function handler(req, res) {
                 },
               ],
             },
-            Description: {
+            Children: {
               rich_text: [
                 {
                   text: {
@@ -86,7 +86,7 @@ export default async function handler(req, res) {
                 },
               ],
             },
-            Description: {
+            Children: {
               rich_text: [
                 {
                   text: {
