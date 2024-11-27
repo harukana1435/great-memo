@@ -51,7 +51,7 @@ ${tabContent}
       for await (const chunk of result.stream) {
         result_text += chunk.text();
       }
-
+      console.log(result_text);
       const results = parseTabs(result_text);
       console.log(results);
       const blocks = markdownToBlocks(results.tabContent + results.tabQuiz);
