@@ -31,7 +31,7 @@ export default async function handler(req, res) {
         const pageId = searchResponse.results[0].id;
         await notion.pages.update({
           page_id: pageId,
-          archived: True,
+          archived: true,
         });
       }
 
