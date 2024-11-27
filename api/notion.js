@@ -29,8 +29,9 @@ export default async function handler(req, res) {
       if (searchResponse.results.length > 0) {
         // 同じIDのページが見つかった場合、そのページを更新
         const pageId = searchResponse.results[0].id;
-        await notion.pages.delete({
+        await notion.pages.update({
           page_id: pageId,
+          archived: True,
         });
       }
 
