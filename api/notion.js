@@ -24,6 +24,7 @@ export default async function handler(req, res) {
       if (searchResponse.results.length > 0) {
         // 同じIDのページが見つかった場合、そのページを更新
         const pageId = searchResponse.results[0].id;
+        console.log(pageId);
 
         await notion.pages.update({
           page_id: pageId,
@@ -43,6 +44,7 @@ export default async function handler(req, res) {
         res.status(200).json({ message: "Page updated successfully" });
       } else {
         // 同じIDのページが見つからない場合、新しいページを作成
+        console.log(tabContent);
         await notion.pages.create({
           parent: { database_id: databaseId },
           properties: {
