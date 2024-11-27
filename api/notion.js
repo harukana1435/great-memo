@@ -12,6 +12,9 @@ export default async function handler(req, res) {
       console.log(tabId);
       console.log(tabContent);
 
+      const result2 = await notion.databases.query({ database_id: expensesID });
+      console.log(result2.results[0].properties);
+
       // データベース内のページを検索
       const searchResponse = await notion.databases.query({
         database_id: databaseId,
