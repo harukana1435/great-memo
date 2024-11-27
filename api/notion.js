@@ -10,7 +10,7 @@ function parseTabs(input) {
   // 正規表現で各セクションを抽出
   const titleMatch = input.match(/<Title>(.*?)<\/Title>/s);
   const contentMatch = input.match(/<Content>(.*?)<\/Content>/s);
-  const quizMatch = input.match(/<Quiz>(.*?)/s);
+  const quizMatch = input.match(/<Quiz>(.*?)<\/Quiz>/s);
 
   // 各セクションをオブジェクトに格納
   const result = {
@@ -55,7 +55,9 @@ ${tabContent}
       console.log(result_text);
       const results = parseTabs(result_text);
       console.log(results);
-      const blocks = markdownToBlocks(results.tabContent + results.tabQuiz);
+      const blocks = markdownToBlocks(
+        results.tabContent + "\n" + results.tabQuiz,
+      );
       console.log(blocks);
 
       // データベース内のページを検索
