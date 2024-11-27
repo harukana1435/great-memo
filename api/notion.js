@@ -74,7 +74,7 @@ export default async function handler(req, res) {
         await notion.pages.create({
           parent: { type: "database_id", database_id: databaseId },
           properties: {
-            Name: {
+            "Name": {
               title: [
                 {
                   text: {
