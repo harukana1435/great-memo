@@ -1,0 +1,21 @@
+{
+  "name": "great-memo-back",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "start": "node index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@notionhq/client": "^2.2.15",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  }
+}
