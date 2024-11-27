@@ -4,10 +4,6 @@ const dotenv = require("dotenv");
 // 環境変数を読み込む
 dotenv.config();
 
-// 環境変数の確認
-console.log("API Key:", process.env.NOTION_API_KEY);
-console.log("Database ID:", process.env.NOTION_DATABASE_ID);
-
 // Notionクライアントを設定
 const notion = new Client({ auth: process.env.NOTION_API_KEY });
 
