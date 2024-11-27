@@ -72,35 +72,36 @@ export default async function handler(req, res) {
         // 同じIDのページが見つからない場合、新しいページを作成
         console.log(tabContent);
         await notion.pages.create({
-          parent: { type: "database_id", database_id: databaseId },
-          properties: {
+          "parent": { "type": "database_id", "database_id": databaseId },
+          "properties": {
             "Name": {
-              title: [
+              "title": [
                 {
-                  text: {
-                    content: tabContent.substring(0, 10), // tabIdをtabIDプロパティに設定
+                  "type": "text",
+                  "text": {
+                    "content": tabContent.substring(0, 10), // tabIdをtabIDプロパティに設定
                   },
                 },
               ],
             },
-            tabID: {
-              rich_text: [
+            "tabID": {
+              "rich_text": [
                 {
-                  text: {
-                    content: tabId, // tabContentの10文字目までをタイトルに
+                  "text": {
+                    "content": tabId, // tabContentの10文字目までをタイトルに
                   },
                 },
               ],
             },
-            children: [
+            "children": [
               {
-                object: "block",
-                type: "paragraph", // 段落として子ブロックを追加
-                paragraph: {
-                  rich_text: [
+                "object": "block",
+                "type": "paragraph", // 段落として子ブロックを追加
+                "paragraph": {
+                  "rich_text": [
                     {
-                      text: {
-                        content: tabContent, // tabContent全体をそのまま追加
+                      "text": {
+                        "content": tabContent, // tabContent全体をそのまま追加
                       },
                     },
                   ],
