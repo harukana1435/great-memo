@@ -77,41 +77,62 @@ export default async function handler(req, res) {
         await notion.pages.create({
           "parent": { "type": "database_id", "database_id": databaseId },
           "properties": {
+            "tabID": {
+              "id": "Y%3Axu",
+              "type": "rich_text",
+              "rich_text": [
+                {
+                  "type": "text",
+                  "text": { "content": tabId, "link": null },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default",
+                  },
+                  "plain_text": tabId,
+                  "href": null,
+                },
+              ],
+            },
             "Name": {
+              "id": "title",
+              "type": "title",
               "title": [
                 {
                   "type": "text",
-                  "text": {
-                    "content": tabContent.substring(0, 10), // tabIdをtabIDプロパティに設定
+                  "text": { "content": tabContent, "link": null },
+                  "annotations": {
+                    "bold": false,
+                    "italic": false,
+                    "strikethrough": false,
+                    "underline": false,
+                    "code": false,
+                    "color": "default",
                   },
+                  "plain_text": tabContent,
+                  "href": null,
                 },
               ],
             },
-            "tabID": {
-              "rich_text": [
-                {
-                  "text": {
-                    "content": tabId, // tabContentの10文字目までをタイトルに
-                  },
-                },
-              ],
-            },
-            "children": [
-              {
-                "object": "block",
-                "type": "paragraph", // 段落として子ブロックを追加
-                "paragraph": {
-                  "rich_text": [
-                    {
-                      "text": {
-                        "content": tabContent, // tabContent全体をそのまま追加
-                      },
-                    },
-                  ],
-                },
-              },
-            ],
           },
+          "children": [
+            {
+              object: "block",
+              type: "paragraph", // 段落として子ブロックを追加
+              paragraph: {
+                rich_text: [
+                  {
+                    text: {
+                      content: tabContent, // tabContent全体をそのまま追加
+                    },
+                  },
+                ],
+              },
+            },
+          ],
         });
 
         res.status(200).json({ message: "Page created successfully" });
