@@ -56,7 +56,13 @@ ${tabContent}
       const results = parseTabs(result_text);
       console.log(results);
       const blocks = markdownToBlocks(
-        results.tabContent + "\n" + "\n" + results.tabQuiz,
+        results.tabContent +
+          "\n" +
+          "\n" +
+          results.tabQuiz +
+          "\n-------------------------------------------------------\n" +
+          "## 原文\n" +
+          tabContent,
       );
       console.log(blocks);
 
