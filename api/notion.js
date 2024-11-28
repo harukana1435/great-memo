@@ -32,7 +32,7 @@ export default async function handler(req, res) {
       const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
       const prompt = `
-入力文で示される文章をNotionのMarkdown記法で出力してください。
+入力文で示される文章をNotionのMarkdown記法でまとめて、出力してください。
 出力形式は必ず守ってください。内容はなるべく欠損させないでください。
 
 出力形式:
