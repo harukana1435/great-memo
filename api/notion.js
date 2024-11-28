@@ -10,7 +10,7 @@ function parseTabs(input) {
   // 正規表現で各セクションを抽出
   const titleMatch = input.match(/<Title>(.*?)<\/Title>/s);
   const contentMatch = input.match(/<Content>(.*?)<\/Content>/s);
-  const quizMatch = input.match(/<Quiz>(.*?)<\/Quiz>/s);
+  const quizMatch = input.match(/<Quiz>([\s\S]*)/);
 
   // 各セクションをオブジェクトに格納
   const result = {
@@ -34,12 +34,12 @@ export default async function handler(req, res) {
       const prompt = `
 入力文で示される文章をNotionのMarkdown記法で出力してください。
 文章の内容を誤字や表現を修正し、わかりやすく整形してください。
-出力形式は必ず守ってください。最後に</Quiz>をつけるのを忘れずに。
+出力形式は必ず守ってください。内容はなるべく欠損させないでください。
 
 出力形式:
 <Title>この中に、20文字程度でタイトルをつけてください。</Title>
-<Content>この中に、入力文をマークダウン記法に変換してください。webサイトのURLとタイトルが書いてあればそれも含めてください。</Content>
-<Quiz>この中に、入力の内容に基づいていて、役に立つクイズを複数問作成してください。クイズという見出しを作ってください。回答は最後の方に、区切って表示するようにしてください。</Quiz>
+<Content>この中に、入力文をマークダウン記法に変換してください。内容はなるべく欠損させないでください。webサイトのURLとタイトルが書いてあればそれも含めてください。</Content>
+<Quiz>この中に、入力の内容に基づいていて、役に立つクイズを複数問作成してください。クイズという見出しを作ってください。回答は最後の方に、区切って表示するようにしてください。
 
 入力文:
 ${tabContent}
