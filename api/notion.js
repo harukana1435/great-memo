@@ -34,7 +34,7 @@ export default async function handler(req, res) {
       const prompt = `
 入力文で示される文章をNotionのMarkdown記法で出力してください。
 文章の内容を誤字や表現を修正し、わかりやすく整形してください。
-出力形式は必ず守ってください。
+出力形式は必ず守ってください。最後に</Quiz>をつけるのを忘れずに。
 
 出力形式:
 <Title>この中に、20文字程度でタイトルをつけてください。</Title>
