@@ -56,7 +56,7 @@ export default async function handler(req, res) {
       const tabTitle = titleResponse.text;
 
       // 2. 入力文を200字程度で分割し、各区間をMarkdown形式に変換
-      const sections = splitContentIntoChunks(tabContent);
+      const sections = tabContent; //splitContentIntoChunks(tabContent);
       const markdownSections = [];
       for (const section of sections) {
         const sectionPrompt = `以下の文章をMarkdown記法に変換してください:\n\n${section}`;
