@@ -53,7 +53,7 @@ export default async function handler(req, res) {
       // //1. 入力文のタイトルを生成
       // const titlePrompt = `以下の文章を簡潔に表すタイトルを20文字以内で生成してください:\n\n${tabContent}`;
       // const titleResponse = await model.generateContentStream(titlePrompt);
-      // let result_text = "";
+      let result_text = "";
       // for await (const chunk of titleResponse.stream) {
       //   result_text += chunk.text();
       // }
