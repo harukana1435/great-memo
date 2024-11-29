@@ -48,19 +48,26 @@ export default async function handler(req, res) {
       const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
       const prompt = `
-You are a machine whose purpose is to transform text into a clean and structured format.
-Please extract and summarize the key information from the given input text in Notion Markdown format as specified below.  
-Do not omit any critical details, and ensure the output remains concise and clear.
+You are a machine designed to process text and create a well-structured Markdown format output.
+
+Task: 
+1. Read the provided input text carefully.
+2. Generate a title that captures the main topic or essence of the input text in about 20-30 characters.
+3. Extract and list the key sections or points as a table of contents in Markdown format.
+
+Instructions:
+- Do not omit any important information from the input.
+- Ensure the **title** is concise but representative of the entire text.
+- Identify the main sections, themes, or topics to create an accurate and logical table of contents.
+- Use the input text's language for the output.できれば日本語を使ってください。
+
 
 Output format:
 <Title>In this area, Add a title of about 20 characters summarizing the content.</Title>
-<Content>In this area, summarize and organize the key points from the input text in Markdown format here.</Content>
-
-出力は日本語を使ってください
+<Content>In this area, convert the input text into Markdown format here.</Content>
 
 Input text:
 ${tabContent}
-
 `;
 
       const result = await model.generateContentStream(prompt);
