@@ -50,7 +50,7 @@ export default async function handler(req, res) {
       const prompt = `
 You are a machine whose sole purpose is to transform text into a clean and structured format.
 Please summarize the given input text in Notion Markdown format as specified below.  
-Do not omit any content from the input. Please format the output in the same language as the input.
+Do not omit any content from the input. Please write Japanese.
 
 Output format:
 <Title>In this area, Add a title of about 20 characters summarizing the content.</Title>
