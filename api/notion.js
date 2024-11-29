@@ -115,31 +115,51 @@ export default async function handler(req, res) {
           archived: true,
         });
       }
-
-      // 新しいページを作成
       await notion.pages.create({
-        parent: { type: "database_id", database_id: databaseId },
-        properties: {
-          tabID: {
-            type: "rich_text",
-            rich_text: [
+        "parent": { "type": "database_id", "database_id": databaseId },
+        "properties": {
+          "tabID": {
+            "id": "Y%3Axu",
+            "type": "rich_text",
+            "rich_text": [
               {
-                type: "text",
-                text: { content: tabId },
+                "type": "text",
+                "text": { "content": tabId, "link": null },
+                "annotations": {
+                  "bold": false,
+                  "italic": false,
+                  "strikethrough": false,
+                  "underline": false,
+                  "code": false,
+                  "color": "default",
+                },
+                "plain_text": tabId,
+                "href": null,
               },
             ],
           },
-          Name: {
-            type: "title",
-            title: [
+          "Name": {
+            "id": "title",
+            "type": "title",
+            "title": [
               {
-                type: "text",
-                text: { content: tabTitle },
+                "type": "text",
+                "text": { "content": tabTitle, "link": null },
+                "annotations": {
+                  "bold": false,
+                  "italic": false,
+                  "strikethrough": false,
+                  "underline": false,
+                  "code": false,
+                  "color": "default",
+                },
+                "plain_text": results.tabTitle,
+                "href": null,
               },
             ],
           },
         },
-        children: blocks,
+        "children": blocks,
       });
 
       res.status(200).json({ message: "Page created successfully" });
