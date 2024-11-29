@@ -57,10 +57,9 @@ ${tabContent}
       console.log(results);
       const blocks = markdownToBlocks(
         results.tabContent +
-          "\n" +
-          "\n" +
-          results.tabQuiz +
-          "\n-------------------------------------------------------\n" +
+          "\nーーーーーーーーーーーーーーーーーーーーーーーーーーーー\n" +
+          +results.tabQuiz +
+          "\nーーーーーーーーーーーーーーーーーーーーーーーーーーーー\n" +
           "## 原文\n" +
           tabContent,
       );
