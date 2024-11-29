@@ -49,15 +49,18 @@ export default async function handler(req, res) {
 
       const prompt = `
 You are a machine whose purpose is to transform text into a clean and structured format.
-Please summarize the given input text in Notion Markdown format as specified below.  
-Do not omit any content from the input.
+Please extract and summarize the key information from the given input text in Notion Markdown format as specified below.  
+Do not omit any critical details, and ensure the output remains concise and clear.
 
-Output format(Japanese):
+Output format:
 <Title>In this area, Add a title of about 20 characters summarizing the content.</Title>
-<Content>In this area, convert the input text into Markdown format here.</Content>
+<Content>In this area, summarize and organize the key points from the input text in Markdown format here.</Content>
+
+出力は日本語を使ってください
 
 Input text:
 ${tabContent}
+
 `;
 
       const result = await model.generateContentStream(prompt);
