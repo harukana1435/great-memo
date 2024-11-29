@@ -31,16 +31,17 @@ export default async function handler(req, res) {
       const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
       const prompt = `
-入力文で示される文章をNotionのMarkdown記法でまとめて、出力してください。
-出力形式は必ず守ってください。入力文で示される文章の内容を絶対に欠損させないでください。
+Please summarize the given input text in Notion Markdown format as specified below.  
+Do not omit any content from the input.  
+Add appropriate headings and bullet points based on the structure of the text.
 
-出力形式:
-<Title>この中に、20文字程度でタイトルをつけてください。</Title>
-<Content>この中に、入力文をマークダウン記法に変換してください。内容を変えずに、見出しを付けたり、箇条書きをつけたりするだけでいいです
+Output format:
+<Title>Add a title of about 20 characters summarizing the content.</Title>
+<Content>Convert the input text into Markdown format here. Retain the original meaning while structuring it with headings, bullet points, or numbered lists where appropriate.</Content>
 
-入力文:
+Input text:
 ${tabContent}
-      `;
+`;
 
       const result = await model.generateContentStream(prompt);
 
