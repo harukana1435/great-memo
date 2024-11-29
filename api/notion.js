@@ -9,14 +9,12 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 function parseTabs(input) {
   // 正規表現で各セクションを抽出
   const titleMatch = input.match(/<Title>(.*?)<\/Title>/s);
-  const contentMatch = input.match(/<Content>(.*?)<\/Content>/s);
-  const quizMatch = input.match(/<Quiz>([\s\S]*)/);
+  const contentMatch = input.match(/<Content>([\s\S]*)/);
 
   // 各セクションをオブジェクトに格納
   const result = {
     tabTitle: titleMatch ? titleMatch[1].trim() : null,
     tabContent: contentMatch ? contentMatch[1].trim() : null,
-    tabQuiz: quizMatch ? quizMatch[1].trim() : null,
   };
 
   return result;
@@ -38,7 +36,7 @@ export default async function handler(req, res) {
 
 出力形式:
 <Title>この中に、20文字程度でタイトルをつけてください。</Title>
-<Content>この中に、入力文をマークダウン記法に変換してください。</Content>
+<Content>この中に、入力文をマークダウン記法に変換してください。
 
 入力文:
 ${tabContent}
