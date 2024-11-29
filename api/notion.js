@@ -20,6 +20,23 @@ function parseTabs(input) {
   return result;
 }
 
+function extractUrlsAndTitles(content) {
+  const urlRegex = /(https?:\/\/[^\s]+)/g; // URLを抽出する正規表現
+  const lines = content.split("\n"); // 改行で文章を分割
+  const results = [];
+
+  for (let i = 0; i < lines.length; i++) {
+    const match = lines[i].match(urlRegex);
+    if (match) {
+      const url = match[0];
+      const title = i > 0 ? lines[i - 1].trim() : "タイトルなし"; // URLの1行前をタイトルとして抽出
+      results.push({ url: url, title: title });
+    }
+  }
+
+  return results;
+}
+
 export default async function handler(req, res) {
   if (req.method === "POST") {
     try {
@@ -54,8 +71,17 @@ ${tabContent}
       console.log(result_text);
       const results = parseTabs(result_text);
       console.log(results);
+
+      // 入力文からURLを抽出し、対応するタイトルを生成
+      const urls = extractUrlsAndTitles(tabContent);
+
       const blocks = markdownToBlocks(
-        results.tabContent +
+        "### 関連資料\n" +
+          urls
+            .map((detail) => `- [${detail.title}](${detail.url})`)
+            .join("\n") +
+          "\nーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー\n" +
+          results.tabContent +
           "\nーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー\n" +
           "## 原文\n" +
           tabContent,
