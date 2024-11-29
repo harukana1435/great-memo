@@ -80,10 +80,10 @@ ${tabContent}
             .map((detail) => `- [${detail.title}](${detail.url})`)
             .join("\n") +
           "\nーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー\n" +
-          "## メモ\n" +
+          "## 目次\n" +
           results.tabContent +
           "\nーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー\n" +
-          "## 原文\n" +
+          "## メモ\n" +
           tabContent,
       );
       console.log(blocks);
