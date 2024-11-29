@@ -72,6 +72,7 @@ export default async function handler(req, res) {
         }
         markdownSections.push(result_text.trim());
       }
+      console.log(markdownSections);
 
       // 3. 入力文からURLを抽出し、対応するタイトルを生成
       const urls = { title: "aiueo", url: "aiueo" }; //extractUrlsAndTitles(tabContent);
