@@ -52,7 +52,7 @@ export default async function handler(req, res) {
 
       // 1. 入力文のタイトルを生成
       const titlePrompt = `以下の文章を簡潔に表すタイトルを20文字以内で生成してください:\n\n${tabContent}`;
-      const titleResponse = await model.generateText({ prompt: titlePrompt });
+      const titleResponse = await model.generateContent(titlePrompt);
       const tabTitle = titleResponse.text.trim();
 
       // 2. 入力文を200字程度で分割し、各区間をMarkdown形式に変換
@@ -60,9 +60,7 @@ export default async function handler(req, res) {
       const markdownSections = [];
       for (const section of sections) {
         const sectionPrompt = `以下の文章をMarkdown記法に変換してください:\n\n${section}`;
-        const sectionResponse = await model.generateText({
-          prompt: sectionPrompt,
-        });
+        const sectionResponse = await model.generateContent(sectionPrompt);
         markdownSections.push(sectionResponse.text.trim());
       }
 
@@ -76,11 +74,13 @@ export default async function handler(req, res) {
 
       // MarkdownをNotion用のブロックに変換
       const blocks = markdownToBlocks(
-        markdownSections.join("\n\n") +
-          "\nーーーーーーーーーーーーーーーーーーーーーーーーーーーー\n" +
+        "### 関連資料\n" +
           urls
             .map((detail) => `- [${detail.title}](${detail.url})`)
             .join("\n") +
+          "\nーーーーーーーーーーーーーーーーーーーーーーーーーーーー\n" +
+          "### メモ\n" +
+          markdownSections.join("\n\n") +
           "\nーーーーーーーーーーーーーーーーーーーーーーーーーーーー\n" +
           "## 原文\n" +
           tabContent,
