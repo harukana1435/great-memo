@@ -31,6 +31,7 @@ export default async function handler(req, res) {
       const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
       const prompt = `
+You are a machine whose sole purpose is to transform text into a clean and structured format.
 Please summarize the given input text in Notion Markdown format as specified below.  
 Do not omit any content from the input.  
 
