@@ -74,7 +74,7 @@ export default async function handler(req, res) {
       }
 
       // 3. 入力文からURLを抽出し、対応するタイトルを生成
-      //const urls = extractUrlsAndTitles(tabContent);
+      const urls = { title: "aiueo", url: "aiueo" }; //extractUrlsAndTitles(tabContent);
 
       // // 4. 入力文の内容に沿ったクイズを生成
       // const quizPrompt = `以下の文章に基づいて役立つクイズを複数問作成してください。\n\n${tabContent}`;
