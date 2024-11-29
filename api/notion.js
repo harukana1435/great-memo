@@ -9,7 +9,7 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 function parseTabs(input) {
   // 正規表現で各セクションを抽出
   const titleMatch = input.match(/<Title>(.*?)<\/Title>/s);
-  const contentMatch = input.match(/<Title>(.*?)<\/Content>/s);
+  const contentMatch = input.match(/<Content>([\s\S]*)/);
 
   // 各セクションをオブジェクトに格納
   const result = {
@@ -48,27 +48,16 @@ export default async function handler(req, res) {
       const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
       const prompt = `
-You are a machine designed to process text and create a well-structured Markdown format output.
+入力文で示される文章をNotionのMarkdown記法でまとめて、出力してください。
+出力形式は必ず守ってください。内容はなるべく欠損させないでください。
 
-Task: 
-1. Read the provided input text carefully.
-2. Generate a title that captures the main topic or essence of the input text in about 20-30 characters.
-3. Extract and list the key sections or points as a table of contents in Markdown format.
+出力形式:
+<Title>この中に、20文字程度でタイトルをつけてください。</Title>
+<Content>この中に、入力文の目次をMarkdown記法でまとめてください。目次には、項目と説明を付け加えてください。
 
-Instructions:
-- Do not omit any important information from the input.
-- Ensure the **title** is concise but representative of the entire text.
-- Identify the main sections, themes, or topics to create an accurate and logical table of contents.
-- Use the input text's language for the output.できれば日本語を使ってください。
-
-
-Output format:
-<Title>In this area, Add a title of about 20 characters summarizing the content.</Title>
-<Content>In this area, convert the input text into Markdown format here.</Content>
-
-Input text:
+入力文:
 ${tabContent}
-`;
+      `;
 
       const result = await model.generateContentStream(prompt);
 
