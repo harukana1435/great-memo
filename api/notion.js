@@ -81,6 +81,7 @@ ${tabContent}
             .map((detail) => `- [${detail.title}](${detail.url})`)
             .join("\n") +
           "\nーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー\n" +
+          "## メモ\n" +
           results.tabContent +
           "\nーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー\n" +
           "## 原文\n" +
