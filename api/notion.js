@@ -28,7 +28,7 @@ export default async function handler(req, res) {
       // リクエストボディをパース
       const { tabId, tabContent } = req.body;
       const databaseId = process.env.NOTION_DATABASE_ID;
-      print(tabContent);
+      console.log(tabContent);
 
       const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
