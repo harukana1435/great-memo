@@ -36,8 +36,8 @@ Do not omit any content from the input.
 Add appropriate headings and bullet points based on the structure of the text.
 
 Output format:
-<Title>Add a title of about 20 characters summarizing the content.</Title>
-<Content>Convert the input text into Markdown format here. Retain the original meaning while structuring it with headings, bullet points, or numbered lists where appropriate.</Content>
+<Title>In this space, Add a title of about 20 characters summarizing the content.</Title>
+<Content>In this space, convert the input text into Markdown format here. Retain the original meaning while structuring it with headings, bullet points, or numbered lists where appropriate.</Content>
 
 Input text:
 ${tabContent}
