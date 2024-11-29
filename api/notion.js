@@ -9,7 +9,7 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 function parseTabs(input) {
   // 正規表現で各セクションを抽出
   const titleMatch = input.match(/<Title>(.*?)<\/Title>/s);
-  const contentMatch = input.match(/<Content>([\s\S]*)/);
+  const contentMatch = input.match(/<Title>(.*?)<\/Content>/s);
 
   // 各セクションをオブジェクトに格納
   const result = {
