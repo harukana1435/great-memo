@@ -36,7 +36,7 @@ export default async function handler(req, res) {
 
 出力形式:
 <Title>この中に、20文字程度でタイトルをつけてください。</Title>
-<Content>この中に、入力文をマークダウン記法に変換してください。URLやそのタイトルもちゃんと出力してください。
+<Content>この中に、入力文をマークダウン記法に変換してください。内容を変えずに、見出しを付けたり、箇条書きをつけたりするだけでいいです
 
 入力文:
 ${tabContent}
