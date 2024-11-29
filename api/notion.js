@@ -50,18 +50,27 @@ export default async function handler(req, res) {
 
       const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
-      // 1. 入力文のタイトルを生成
-      // const titlePrompt = `以下の文章を簡潔に表すタイトルを20文字以内で生成してください:\n\n${tabContent}`;
-      // const titleResponse = await model.generateContent(titlePrompt);
-      const tabTitle = "aiueo"; //titleResponse.text;
+      //1. 入力文のタイトルを生成
+      const titlePrompt = `以下の文章を簡潔に表すタイトルを20文字以内で生成してください:\n\n${tabContent}`;
+      const titleResponse = await model.generateContentStream(titlePrompt);
+      let result_text = "";
+      for await (const chunk of titleResponse.stream) {
+        result_text += chunk.text();
+      }
+      const tabTitle = result_text.trim(); //titleResponse.text;
 
       // 2. 入力文を200字程度で分割し、各区間をMarkdown形式に変換
       const sections = tabContent; //splitContentIntoChunks(tabContent);
       const markdownSections = [];
       for (const section of sections) {
         const sectionPrompt = `以下の文章をMarkdown記法に変換してください:\n\n${section}`;
-        const sectionResponse = await model.generateContent(sectionPrompt);
-        markdownSections.push(sectionResponse.text);
+        const sectionResponse =
+          await model.generateContentStream(sectionPrompt);
+        result_text = "";
+        for await (const chunk of sectionResponse.stream) {
+          result_text += chunk.text();
+        }
+        markdownSections.push(result_text.trim());
       }
 
       // 3. 入力文からURLを抽出し、対応するタイトルを生成
