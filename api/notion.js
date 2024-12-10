@@ -53,7 +53,7 @@ export default async function handler(req, res) {
 
 出力形式:
 <Title>この中に、20文字程度でタイトルをつけてください。</Title>
-<Content>この中に、入力文の目次をMarkdown記法でまとめてください。目次には、項目と説明を付け加えてください。
+<Content>この中に、入力文を要約してMarkdown記法でまとめてください。目次には、項目と説明を付け加えてください。
 
 入力文:
 ${tabContent}
