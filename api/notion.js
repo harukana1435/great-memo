@@ -18,7 +18,7 @@ function extractUrlsAndTitles(content) {
       return line.replace(urlRegex, (match) => {
         const url = match;
         const title =
-          linecount > 0 ? lines[counter - 1].trim() : "タイトルなし"; // URLの1行前をタイトルとして抽出
+          linecount > 0 ? lines[linecount - 1].trim() : "タイトルなし"; // URLの1行前をタイトルとして抽出
         results.push({ number: counter, url: url, title: title }); // 番号を含む結果を追加
         const linkText = `[${counter}](${url})`; // 番号付きのハイパーリンクを生成
         counter++;
