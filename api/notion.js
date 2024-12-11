@@ -9,13 +9,16 @@ function extractUrlsAndTitles(content) {
   const lines = content.split("\n"); // 改行で文章を分割
   const results = [];
   let counter = 1; // URLに付ける番号のカウンタ
+  let linecount = 0;
 
   // contentを行ごとに処理して新しい内容を作成
   const updatedContent = lines
     .map((line) => {
+      linecount++;
       return line.replace(urlRegex, (match) => {
         const url = match;
-        const title = counter > 1 ? lines[counter - 2].trim() : "タイトルなし"; // URLの1行前をタイトルとして抽出
+        const title =
+          linecount > 0 ? lines[counter - 1].trim() : "タイトルなし"; // URLの1行前をタイトルとして抽出
         results.push({ number: counter, url: url, title: title }); // 番号を含む結果を追加
         const linkText = `[${counter}](${url})`; // 番号付きのハイパーリンクを生成
         counter++;
