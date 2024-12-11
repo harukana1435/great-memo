@@ -5,7 +5,7 @@ import { markdownToBlocks } from "@tryfabric/martian";
 const notion = new Client({ auth: process.env.NOTION_API_KEY });
 
 function extractUrlsAndTitles(content) {
-  const urlRegex = /(https?:\/\/[^\s]+)/g; // URLを抽出する正規表現
+  const urlRegex = /\b(?:https?|ftp|file):\/\/[^\s]+/g; // URLを抽出する正規表現
   const lines = content.split("\n"); // 改行で文章を分割
   const results = [];
   let counter = 1; // URLに付ける番号のカウンタ
