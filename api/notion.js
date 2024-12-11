@@ -74,7 +74,7 @@ export default async function handler(req, res) {
           results
             .map((detail, index) => {
               const circledNumber = String.fromCharCode(9312 + index); // ①から始まる番号に変換
-              return `- ${circledNumber} [${detail.title}](${detail.url})`;
+              return `- [${detail.title}](${detail.url})`;
             })
             .join("\n") +
           "\nーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー\n" +
