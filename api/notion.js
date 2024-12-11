@@ -1,40 +1,39 @@
 import { Client } from "@notionhq/client";
-import { GoogleGenerativeAI } from "@google/generative-ai";
 import { markdownToBlocks } from "@tryfabric/martian";
 
 // Notionクライアントの初期化
 const notion = new Client({ auth: process.env.NOTION_API_KEY });
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-
-function parseTabs(input) {
-  // 正規表現で各セクションを抽出
-  const titleMatch = input.match(/<Title>(.*?)<\/Title>/s);
-  const contentMatch = input.match(/<Content>([\s\S]*)/);
-
-  // 各セクションをオブジェクトに格納
-  const result = {
-    tabTitle: titleMatch ? titleMatch[1].trim() : null,
-    tabContent: contentMatch ? contentMatch[1].trim() : null,
-  };
-
-  return result;
-}
 
 function extractUrlsAndTitles(content) {
   const urlRegex = /(https?:\/\/[^\s]+)/g; // URLを抽出する正規表現
   const lines = content.split("\n"); // 改行で文章を分割
   const results = [];
+  let counter = 1; // URLに付ける番号のカウンタ
 
-  for (let i = 0; i < lines.length; i++) {
-    const match = lines[i].match(urlRegex);
-    if (match) {
-      const url = match[0];
-      const title = i > 0 ? lines[i - 1].trim() : "タイトルなし"; // URLの1行前をタイトルとして抽出
-      results.push({ url: url, title: title });
-    }
+  // contentを行ごとに処理して新しい内容を作成
+  const updatedContent = lines
+    .map((line) => {
+      return line.replace(urlRegex, (match) => {
+        const url = match;
+        const title = counter > 1 ? lines[counter - 2].trim() : "タイトルなし"; // URLの1行前をタイトルとして抽出
+        results.push({ number: counter, url: url, title: title }); // 番号を含む結果を追加
+        const linkText = `[${counter}](${url})`; // 番号付きのハイパーリンクを生成
+        counter++;
+        return linkText; // URLを番号付きリンクに置き換え
+      });
+    })
+    .join("\n");
+
+  return { updatedContent, results }; // 置き換え後のcontentと結果を返す
+}
+
+function extractTop(content) {
+  const lines = content.split("\n");
+  if (lines.length !== 0) {
+    return lines[0];
+  } else {
+    return "タイトルなし";
   }
-
-  return results;
 }
 
 export default async function handler(req, res) {
@@ -45,43 +44,22 @@ export default async function handler(req, res) {
       const databaseId = process.env.NOTION_DATABASE_ID;
       console.log(tabContent);
 
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      const title = extractTop(tabContent);
 
-      const prompt = `
-入力文で示される文章をNotionのMarkdown記法でまとめて、出力してください。
-出力形式は必ず守ってください。内容はなるべく欠損させないでください。
-
-出力形式:
-<Title>この中に、20文字程度でタイトルをつけてください。</Title>
-<Content>この中に、入力文を要約してMarkdown記法でまとめてください。目次には、項目と説明を付け加えてください。
-
-入力文:
-${tabContent}
-      `;
-
-      const result = await model.generateContentStream(prompt);
-
-      let result_text = "";
-
-      for await (const chunk of result.stream) {
-        result_text += chunk.text();
-      }
-
-      console.log(result_text);
-      const results = parseTabs(result_text);
-      console.log(results);
-
-      // 入力文からURLを抽出し、対応するタイトルを生成
-      const urls = extractUrlsAndTitles(tabContent);
+      // 入力文からURLを抽出し、対応するタイトルを生成し、番号リンクを適用
+      const { updatedContent, results } = extractUrlsAndTitles(tabContent);
 
       const blocks = markdownToBlocks(
         "### 関連資料\n" +
-          urls
-            .map((detail) => `- [${detail.title}](${detail.url})`)
+          results
+            .map(
+              (detail) =>
+                `- [${detail.number}. ${detail.title}](${detail.url})`,
+            )
             .join("\n") +
           "\nーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー\n" +
           "### メモ\n" +
-          tabContent,
+          updatedContent,
       );
       console.log(blocks);
 
@@ -134,7 +112,7 @@ ${tabContent}
             "title": [
               {
                 "type": "text",
-                "text": { "content": results.tabTitle, "link": null },
+                "text": { "content": title, "link": null },
                 "annotations": {
                   "bold": false,
                   "italic": false,
