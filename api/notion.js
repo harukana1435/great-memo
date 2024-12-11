@@ -10,19 +10,16 @@ function extractUrlsAndTitles(content) {
   const results = [];
   let counter = 1; // URLに付ける番号のカウンタ
 
-  // contentを行ごとに処理して新しい内容を作成
-  let updatedContent = "";
+  let updatedContentLines = []; // 更新された内容を一行ずつ保存する配列
 
   for (let i = 0; i < lines.length; i++) {
     let line = lines[i];
-    let lineUpdated = line;
 
     const match = line.match(urlRegex); // URLを探す
 
     if (match) {
-      // URLが見つかった場合、1行前をタイトルとして抽出
-      const title = i > 0 ? lines[i - 1].trim() : "タイトルなし";
       const url = match[0];
+      const title = i > 0 ? lines[i - 1].trim() : "タイトルなし"; // URLの1行前をタイトルとして抽出
 
       // タイトルとURLを組み合わせてリンクテキストを生成
       const linkText = `[${title}](${url})`;
@@ -31,18 +28,21 @@ function extractUrlsAndTitles(content) {
       results.push({ number: counter, url: url, title: title });
       counter++;
 
-      // リンクテキストに置き換え
-      lineUpdated = lineUpdated.replace(url, linkText);
+      // 現在の行にリンクテキストを挿入
+      line = line.replace(url, linkText);
 
-      // 1行前のタイトルは消す（行が繰り返し処理されないように）
+      // 1行前のタイトル行はスキップ（反映しない）
       if (i > 0) {
-        lines[i - 1] = ""; // 前の行を空にする
+        updatedContentLines.pop(); // 直前の行を削除
       }
     }
 
-    // 行ごとに更新された内容を追加
-    updatedContent += lineUpdated + "\n";
+    // 更新された行を保存
+    updatedContentLines.push(line);
   }
+
+  // 行を結合して最終的なコンテンツを作成
+  const updatedContent = updatedContentLines.join("\n");
 
   return { updatedContent, results }; // 置き換え後のcontentと結果を返す
 }
@@ -72,14 +72,15 @@ export default async function handler(req, res) {
       const blocks = markdownToBlocks(
         "### 関連資料\n" +
           results
-            .map(
-              (detail) =>
-                `- [${detail.number}. ${detail.title}](${detail.url})`,
-            )
+            .map((detail, index) => {
+              const circledNumber = String.fromCharCode(9312 + index); // ①から始まる番号に変換
+              return `- ${circledNumber} [${detail.title}](${detail.url})`;
+            })
             .join("\n") +
           "\nーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー\n" +
           updatedContent,
       );
+
       console.log(blocks);
 
       // データベース内のページを検索
