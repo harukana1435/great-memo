@@ -35,10 +35,10 @@ function extractUrlsAndTitles(content) {
       if (i > 0) {
         updatedContentLines.pop(); // 直前の行を削除
       }
+    } else {
+      // 更新された行を保存
+      updatedContentLines.push(line);
     }
-
-    // 更新された行を保存
-    updatedContentLines.push(line);
   }
 
   // 行を結合して最終的なコンテンツを作成
