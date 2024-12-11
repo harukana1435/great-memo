@@ -1,8 +1,10 @@
 import { Client } from "@notionhq/client";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import { markdownToBlocks } from "@tryfabric/martian";
 
 // Notionクライアントの初期化
 const notion = new Client({ auth: process.env.NOTION_API_KEY });
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 function parseTabs(input) {
   // 正規表現で各セクションを抽出
@@ -43,6 +45,32 @@ export default async function handler(req, res) {
       const databaseId = process.env.NOTION_DATABASE_ID;
       console.log(tabContent);
 
+      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+
+      const prompt = `
+入力文で示される文章をNotionのMarkdown記法でまとめて、出力してください。
+出力形式は必ず守ってください。内容はなるべく欠損させないでください。
+
+出力形式:
+<Title>この中に、20文字程度でタイトルをつけてください。</Title>
+<Content>この中に、入力文を要約してMarkdown記法でまとめてください。目次には、項目と説明を付け加えてください。
+
+入力文:
+${tabContent}
+      `;
+
+      const result = await model.generateContentStream(prompt);
+
+      let result_text = "";
+
+      for await (const chunk of result.stream) {
+        result_text += chunk.text();
+      }
+
+      console.log(result_text);
+      const results = parseTabs(result_text);
+      console.log(results);
+
       // 入力文からURLを抽出し、対応するタイトルを生成
       const urls = extractUrlsAndTitles(tabContent);
 
@@ -51,6 +79,9 @@ export default async function handler(req, res) {
           urls
             .map((detail) => `- [${detail.title}](${detail.url})`)
             .join("\n") +
+          "\nーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー\n" +
+          "### まとめ\n" +
+          results.tabContent +
           "\nーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー\n" +
           "### メモ\n" +
           tabContent,
