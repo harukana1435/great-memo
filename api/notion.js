@@ -5,8 +5,7 @@ import { markdownToBlocks } from "@tryfabric/martian";
 const notion = new Client({ auth: process.env.NOTION_API_KEY });
 
 function extractUrlsAndTitles(content) {
-  // URLを抽出する正規表現 (http, https, ftp, file)
-  const urlRegex = /\b(?:https?|ftp|file):\/\/[^\s]+/g;
+  const urlRegex = /\b(?:https?|ftp|file):\/\/[^\s]+/g; // URLを抽出する正規表現
   const lines = content.split("\n"); // 改行で文章を分割
   const results = [];
   let counter = 1; // URLに付ける番号のカウンタ
@@ -17,10 +16,20 @@ function extractUrlsAndTitles(content) {
       return line.replace(urlRegex, (match) => {
         const url = match;
         const title = counter > 1 ? lines[counter - 2].trim() : "タイトルなし"; // URLの1行前をタイトルとして抽出
-        results.push({ number: counter, url: url, title: title }); // 番号を含む結果を追加
-        const linkText = `[${counter}](${url})`; // 番号付きのハイパーリンクを生成
-        counter++;
-        return linkText; // URLを番号付きリンクに置き換え
+        const isFileUrl = url.startsWith("file://"); // fileスキームの確認
+
+        if (isFileUrl) {
+          // fileスキームの場合はハイパーリンクを作成せず、そのまま表示
+          results.push({ number: counter, url: url, title: title });
+          counter++;
+          return `${url}`; // ハイパーリンクなしでそのまま返す
+        } else {
+          // 通常のスキームではハイパーリンクを作成
+          results.push({ number: counter, url: url, title: title });
+          const linkText = `[${counter}](${url})`; // 番号付きのハイパーリンクを生成
+          counter++;
+          return linkText; // URLを番号付きリンクに置き換え
+        }
       });
     })
     .join("\n");
