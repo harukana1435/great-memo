@@ -9,23 +9,40 @@ function extractUrlsAndTitles(content) {
   const lines = content.split("\n"); // 改行で文章を分割
   const results = [];
   let counter = 1; // URLに付ける番号のカウンタ
-  let linecount = 0;
 
   // contentを行ごとに処理して新しい内容を作成
-  const updatedContent = lines
-    .map((line) => {
-      linecount++;
-      return line.replace(urlRegex, (match) => {
-        const url = match;
-        const title =
-          linecount > 0 ? lines[linecount - 2].trim() : "タイトルなし"; // URLの1行前をタイトルとして抽出
-        results.push({ number: counter, url: url, title: title }); // 番号を含む結果を追加
-        const linkText = `[${counter}](${url})`; // 番号付きのハイパーリンクを生成
-        counter++;
-        return linkText; // URLを番号付きリンクに置き換え
-      });
-    })
-    .join("\n");
+  let updatedContent = "";
+
+  for (let i = 0; i < lines.length; i++) {
+    let line = lines[i];
+    let lineUpdated = line;
+
+    const match = line.match(urlRegex); // URLを探す
+
+    if (match) {
+      // URLが見つかった場合、1行前をタイトルとして抽出
+      const title = i > 0 ? lines[i - 1].trim() : "タイトルなし";
+      const url = match[0];
+
+      // タイトルとURLを組み合わせてリンクテキストを生成
+      const linkText = `[${title}](${url})`;
+
+      // 結果に番号付きでURLとタイトルを追加
+      results.push({ number: counter, url: url, title: title });
+      counter++;
+
+      // リンクテキストに置き換え
+      lineUpdated = lineUpdated.replace(url, linkText);
+
+      // 1行前のタイトルは消す（行が繰り返し処理されないように）
+      if (i > 0) {
+        lines[i - 1] = ""; // 前の行を空にする
+      }
+    }
+
+    // 行ごとに更新された内容を追加
+    updatedContent += lineUpdated + "\n";
+  }
 
   return { updatedContent, results }; // 置き換え後のcontentと結果を返す
 }
