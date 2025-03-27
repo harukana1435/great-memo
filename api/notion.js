@@ -1,5 +1,10 @@
 import { Client } from "@notionhq/client";
 import { markdownToBlocks } from "@tryfabric/martian";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
+// Notionクライアントの初期化
+const notion = new Client({ auth: process.env.NOTION_API_KEY });
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 function parseTabs(input) {
   // 正規表現で各セクションを抽出
@@ -14,9 +19,6 @@ function parseTabs(input) {
 
   return result;
 }
-
-// Notionクライアントの初期化
-const notion = new Client({ auth: process.env.NOTION_API_KEY });
 
 function extractUrlsAndTitles(content) {
   const urlRegex = /(https?:\/\/[^\s]+)/g; // URLを抽出する正規表現
