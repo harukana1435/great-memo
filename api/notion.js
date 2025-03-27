@@ -78,7 +78,7 @@ export default async function handler(req, res) {
       const databaseId = process.env.NOTION_DATABASE_ID;
       console.log(tabContent);
 
-      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+      const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro-002" });
 
       const prompt = `
 入力文で示される文章をNotionのMarkdown記法でまとめて、出力してください。
