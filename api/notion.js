@@ -83,12 +83,12 @@ export default async function handler(req, res) {
       const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro-002" });
 
       const prompt = `
-入力文で示される文章をNotionのMarkdown記法でまとめて、出力してください。
-出力形式は必ず守ってください。内容はなるべく欠損させないでください。
+入力文に示される文章に対して、以下の出力をしてください。
+出力形式は必ず守ってください。
 
 出力形式:
 <Title>この中に、20文字程度でタイトルをつけてください。</Title>
-<Content>この中に、入力文を要約してMarkdown記法でまとめてください。目次には、項目と説明を付け加えてください。
+<Content>この中に、入力文を要約してMarkdown記法で簡潔にまとめてください。
 
 入力文:
 ${tabContent}
@@ -113,7 +113,7 @@ ${tabContent}
       const blocks = markdownToBlocks(
         "### 要約" +
           "\n" +
-          generated +
+          generated.tabContent +
           "\nーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー\n" +
           "### 関連資料\n" +
           results
@@ -177,7 +177,7 @@ ${tabContent}
             "title": [
               {
                 "type": "text",
-                "text": { "content": title, "link": null },
+                "text": { "content": generated.tabTitle, "link": null },
                 "annotations": {
                   "bold": false,
                   "italic": false,
