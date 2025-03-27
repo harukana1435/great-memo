@@ -104,7 +104,6 @@ ${tabContent}
 
       console.log(result_text);
       const generated = parseTabs(result_text);
-      console.log(results);
 
       const title = extractTop(tabContent);
 
