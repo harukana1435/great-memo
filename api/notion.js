@@ -1,6 +1,20 @@
 import { Client } from "@notionhq/client";
 import { markdownToBlocks } from "@tryfabric/martian";
 
+function parseTabs(input) {
+  // 正規表現で各セクションを抽出
+  const titleMatch = input.match(/<Title>(.*?)<\/Title>/s);
+  const contentMatch = input.match(/<Content>([\s\S]*)/);
+
+  // 各セクションをオブジェクトに格納
+  const result = {
+    tabTitle: titleMatch ? titleMatch[1].trim() : null,
+    tabContent: contentMatch ? contentMatch[1].trim() : null,
+  };
+
+  return result;
+}
+
 // Notionクライアントの初期化
 const notion = new Client({ auth: process.env.NOTION_API_KEY });
 
@@ -19,7 +33,7 @@ function extractUrlsAndTitles(content) {
 
     if (match) {
       const url = match[0];
-      const title = i > 0 ? lines[i - 1].trim() : "タイトルなし"; // URLの1行前をタイトルとして抽出
+      //const title = i > 0 ? lines[i - 1].trim() : "タイトルなし"; // URLの1行前をタイトルとして抽出
 
       // タイトルとURLを組み合わせてリンクテキストを生成
       const linkText = `[${title}](${url})`;
@@ -32,9 +46,9 @@ function extractUrlsAndTitles(content) {
       line = line.replace(url, linkText);
 
       // 1行前のタイトル行はスキップ（反映しない）
-      if (i > 0) {
-        updatedContentLines.pop(); // 直前の行を削除
-      }
+      // if (i > 0) {
+      //   updatedContentLines.pop(); // 直前の行を削除
+      // }
     } else {
       // 更新された行を保存
       updatedContentLines.push(line);
@@ -64,13 +78,43 @@ export default async function handler(req, res) {
       const databaseId = process.env.NOTION_DATABASE_ID;
       console.log(tabContent);
 
+      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+
+      const prompt = `
+入力文で示される文章をNotionのMarkdown記法でまとめて、出力してください。
+出力形式は必ず守ってください。内容はなるべく欠損させないでください。
+
+出力形式:
+<Title>この中に、20文字程度でタイトルをつけてください。</Title>
+<Content>この中に、入力文を要約してMarkdown記法でまとめてください。目次には、項目と説明を付け加えてください。
+
+入力文:
+${tabContent}
+      `;
+
+      const result = await model.generateContentStream(prompt);
+
+      let result_text = "";
+
+      for await (const chunk of result.stream) {
+        result_text += chunk.text();
+      }
+
+      console.log(result_text);
+      const generated = parseTabs(result_text);
+      console.log(results);
+
       const title = extractTop(tabContent);
 
       // 入力文からURLを抽出し、対応するタイトルを生成し、番号リンクを適用
       const { updatedContent, results } = extractUrlsAndTitles(tabContent);
 
       const blocks = markdownToBlocks(
-        "### 関連資料\n" +
+        "### 要約" +
+          "\n" +
+          generated +
+          "\nーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーーー\n" +
+          "### 関連資料\n" +
           results
             .map((detail, index) => {
               const circledNumber = String.fromCharCode(9312 + index); // ①から始まる番号に変換
